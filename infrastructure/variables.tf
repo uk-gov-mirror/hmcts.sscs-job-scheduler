@@ -1,11 +1,9 @@
 variable "product" {
   type    = "string"
-  default = "rpe"
 }
 
 variable "microservice" {
   type    = "string"
-  default = "job-scheduler"
 }
 
 variable "location" {

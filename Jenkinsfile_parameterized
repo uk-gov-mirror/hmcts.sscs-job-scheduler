@@ -3,8 +3,8 @@
 
 properties([
 		parameters([
-			string(name: 'PRODUCT_NAME', defaultValue: 'rpe', description: ''),
-			string(name: 'APP', defaultValue: 'job-scheduler', description: ''),
+			string(name: 'PRODUCT_NAME', defaultValue: 'sscs-tya', description: ''),
+			string(name: 'APP', defaultValue: 'scheduler', description: ''),
 			string(name: 'TYPE', defaultValue: 'java', description: ''),
 			string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be built and deployed'),
 			choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')

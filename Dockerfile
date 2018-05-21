@@ -1,6 +1,6 @@
 FROM openjdk:8-jre
 
-COPY build/install/job-scheduler /opt/app/
+COPY build/install/sscs-job-scheduler /opt/app/
 
 WORKDIR /opt/app
 
@@ -8,4 +8,4 @@ HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --s
 
 EXPOSE 8484
 
-ENTRYPOINT ["/opt/app/bin/job-scheduler"]
+ENTRYPOINT ["/opt/app/bin/sscs-job-scheduler"]

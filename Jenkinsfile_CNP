@@ -2,8 +2,8 @@
 @Library("Infrastructure")
 
 def type = "java"
-def product = "rpe"
-def component = "job-scheduler"
+def product = "sscs-tya"
+def component = "scheduler"
 
 def channel = '#rpe-build-notices'
 
