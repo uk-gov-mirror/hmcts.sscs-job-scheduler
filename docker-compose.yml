@@ -1,15 +1,15 @@
 version: '2.1'
 
 services:
-  job-scheduler-api:
+  sscs-job-scheduler-api:
     build:
       context: .
       args:
         - http_proxy
         - https_proxy
         - no_proxy
-    image: docker.artifactory.reform.hmcts.net/reform/job-scheduler-api
-    container_name: job-scheduler-api
+    image: docker.artifactory.reform.hmcts.net/reform/sscs-job-scheduler-api
+    container_name: sscs-job-scheduler-api
     environment:
       - S2S_URL
       - S2S_SECRET

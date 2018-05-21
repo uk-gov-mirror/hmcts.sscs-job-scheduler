@@ -16,7 +16,7 @@ module "job-scheduler-database" {
   postgresql_user     = "jobscheduler"
 }
 
-module "job-scheduler-api" {
+module "sscs-job-scheduler-api" {
   source              = "git@github.com:contino/moj-module-webapp.git?ref=master"
   product             = "${var.product}-${var.microservice}"
   location            = "${var.location}"
@@ -52,7 +52,7 @@ module "job-scheduler-vault" {
   env                     = "${var.env}"
   tenant_id               = "${var.tenant_id}"
   object_id               = "${var.jenkins_AAD_objectId}"
-  resource_group_name     = "${module.job-scheduler-api.resource_group_name}"
+  resource_group_name     = "${module.sscs-job-scheduler-api.resource_group_name}"
   product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
 }
 

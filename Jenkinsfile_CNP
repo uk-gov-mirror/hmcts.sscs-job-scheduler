@@ -3,7 +3,7 @@
 
 def type = "java"
 def product = "rpe"
-def component = "job-scheduler"
+def component = "sscs-job-scheduler"
 
 def channel = '#rpe-build-notices'
 
