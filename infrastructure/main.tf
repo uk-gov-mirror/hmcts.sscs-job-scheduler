@@ -41,10 +41,10 @@ module "sscs-job-scheduler" {
     S2S_MICROSERVICE = "${var.idam_s2s_auth_microservice}"
 
     // db vars
-    JOB_SCHEDULER_DB_HOST     = "${module.job-scheduler-database.host_name}"
-    JOB_SCHEDULER_DB_PORT     = "${module.job-scheduler-database.postgresql_listen_port}"
-    JOB_SCHEDULER_DB_PASSWORD = "${module.job-scheduler-database.postgresql_password}"
-    JOB_SCHEDULER_DB_USERNAME = "${module.job-scheduler-database.user_name}"
+    # JOB_SCHEDULER_DB_HOST     = "${module.job-scheduler-database.host_name}"
+    # JOB_SCHEDULER_DB_PORT     = "${module.job-scheduler-database.postgresql_listen_port}"
+    # JOB_SCHEDULER_DB_PASSWORD = "${module.job-scheduler-database.postgresql_password}"
+    # JOB_SCHEDULER_DB_USERNAME = "${module.job-scheduler-database.user_name}"
     JOB_SCHEDULER_DB_NAME     = "postgres"
     JOB_SCHEDULER_DB_CONNECTION_OPTIONS = "?ssl"
   }
@@ -61,32 +61,32 @@ module "job-scheduler-vault" {
   product_group_object_id = "38f9dea6-e861-4a50-9e73-21e64f563537"
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES-USER" {
-  name      = "job-scheduler-POSTGRES-USER"
-  value     = "${module.job-scheduler-database.user_name}"
-  vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
-}
+# resource "azurerm_key_vault_secret" "POSTGRES-USER" {
+#   name      = "job-scheduler-POSTGRES-USER"
+#   value     = "${module.job-scheduler-database.user_name}"
+#   vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
+# }
 
-resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
-  name      = "job-scheduler-POSTGRES-PASS"
-  value     = "${module.job-scheduler-database.postgresql_password}"
-  vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
-}
+# resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
+#   name      = "job-scheduler-POSTGRES-PASS"
+#   value     = "${module.job-scheduler-database.postgresql_password}"
+#   vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
+# }
 
-resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
-  name      = "job-scheduler-POSTGRES-HOST"
-  value     = "${module.job-scheduler-database.host_name}"
-  vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
-}
+# resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
+#   name      = "job-scheduler-POSTGRES-HOST"
+#   value     = "${module.job-scheduler-database.host_name}"
+#   vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
+# }
 
-resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
-  name      = "job-scheduler-POSTGRES-PORT"
-  value     = "${module.job-scheduler-database.postgresql_listen_port}"
-  vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
-}
+# resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
+#   name      = "job-scheduler-POSTGRES-PORT"
+#   value     = "${module.job-scheduler-database.postgresql_listen_port}"
+#   vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
+# }
 
-resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
-  name      = "job-scheduler-POSTGRES-DATABASE"
-  value     = "${module.job-scheduler-database.postgresql_database}"
-  vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
-}
+# resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
+#   name      = "job-scheduler-POSTGRES-DATABASE"
+#   value     = "${module.job-scheduler-database.postgresql_database}"
+#   vault_uri = "${module.job-scheduler-vault.key_vault_uri}"
+# }
