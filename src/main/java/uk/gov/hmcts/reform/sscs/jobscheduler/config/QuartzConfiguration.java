@@ -1,10 +1,5 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler.config;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import javax.inject.Singleton;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.spi.JobFactory;
@@ -13,9 +8,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.jobs.FailedJobRescheduler;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzFailedJobRescheduler;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import javax.inject.Singleton;
 
 @Configuration
 @ConfigurationProperties
@@ -29,16 +29,15 @@ public class QuartzConfiguration {
     }
 
     @Bean
-    public JobFactory jobFactory(ApplicationContext appCtx) {
+    public JobFactory jobFactory(ApplicationContext context) {
         AutowiringSpringBeanJobFactory jobFactory = new AutowiringSpringBeanJobFactory();
-        jobFactory.setApplicationContext(appCtx);
-
+        jobFactory.setApplicationContext(context);
         return jobFactory;
     }
 
     @Bean
-    @DependsOn("flywayInitializer")
     public SchedulerFactoryBean schedulerFactoryBean(JobFactory jobFactory) {
+
         Properties properties = new Properties();
         properties.putAll(quartzProperties);
 
@@ -59,7 +58,7 @@ public class QuartzConfiguration {
 
         Scheduler scheduler = factory.getScheduler();
 
-        FailedJobRescheduler failedJobRescheduler = new FailedJobRescheduler(
+        QuartzFailedJobRescheduler failedJobRescheduler = new QuartzFailedJobRescheduler(
             maxJobExecutionAttempts,
             Duration.ofMillis(delayBetweenAttemptsInMs)
         );
@@ -69,4 +68,5 @@ public class QuartzConfiguration {
 
         return scheduler;
     }
+
 }
