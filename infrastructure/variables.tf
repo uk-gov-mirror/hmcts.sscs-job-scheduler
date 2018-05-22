@@ -2,18 +2,9 @@ variable "product" {
   type    = "string"
 }
 
-variable "microservice" {
-  type    = "string"
-}
-
 variable "location" {
   type    = "string"
   default = "UK South"
-}
-
-variable "location_db" {
-  type    = "string"
-  default = "West Europe"
 }
 
 variable "env" {
