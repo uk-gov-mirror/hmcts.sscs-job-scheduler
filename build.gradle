@@ -194,6 +194,7 @@ dependencies {
   // todo: use spring-boot-starter-quartz after migrating to Spring Boot 2
 
   compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
+  compile group: 'org.flywaydb', name: 'flyway-core', version: '5.0.2'
 
   compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
   compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
