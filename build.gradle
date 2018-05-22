@@ -107,13 +107,6 @@ sonarqube {
   }
 }
 
-task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-  baselineOnMigrate = true
-  if (project.hasProperty("dburl")) {
-    url = "jdbc:postgresql://${dburl}"
-  }
-}
-
 task smoke(type: Test) {
   description = "Runs Smoke Tests"
   testClassesDirs = sourceSets.smokeTest.output.classesDirs
@@ -201,8 +194,6 @@ dependencies {
   // todo: use spring-boot-starter-quartz after migrating to Spring Boot 2
 
   compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
-  compile group: 'org.flywaydb', name: 'flyway-core', version: '5.0.2'
-  compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
 
   compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
   compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
@@ -229,7 +220,6 @@ dependencies {
 
   functionalTestCompile sourceSets.main.runtimeClasspath
   functionalTestCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-  functionalTestCompile group: 'org.testcontainers', name: 'postgresql', version: '1.4.3'
 
   smokeTestCompile sourceSets.main.runtimeClasspath
   smokeTestCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'

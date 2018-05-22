@@ -25,7 +25,7 @@ Run the application by executing:
 ./gradlew bootRun
 ```
 
-In order to run the application (with its database) in Docker, execute:
+In order to run the application in Docker, execute:
 ```bash
 ./bin/run-in-docker.sh
 ```
@@ -75,7 +75,8 @@ To run all checks execute the following command:
 ## Job management
 
 The service manages its clients' jobs with [Quartz](http://www.quartz-scheduler.org/).  
-It uses a PostgreSQL database for persisting those jobs. Also, Quartz is configured
+Applications importing this project as a JAR will be required to use their own database. 
+This could be a PostgreSQL database for persisting those jobs. Also, Quartz is configured
 to run in cluster mode, i.e. the load will be distributed among multiple nodes, each
 running different jobs.
 
