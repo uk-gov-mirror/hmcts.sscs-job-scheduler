@@ -2,10 +2,6 @@ provider "vault" {
   address = "https://vault.reform.hmcts.net:6200"
 }
 
-data "vault_generic_secret" "sscs_s2s_secret" {
-  path = "secret/${var.infrastructure_env}/ccidam/service-auth-provider/api/microservice-keys/sscs"
-}
-
 locals {
   aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
 
@@ -29,10 +25,5 @@ module "sscs-job-scheduler" {
     REFORM_TEAM         = "${var.product}"
     REFORM_SERVICE_NAME = "${var.component}"
     REFORM_ENVIRONMENT  = "${var.env}"
-
-    // IdAM s2s
-    S2S_URL = "${local.s2sCnpUrl}"
-    S2S_SECRET = "${data.vault_generic_secret.sscs_s2s_secret.data["value"]}"
-    S2S_MICROSERVICE = "${var.idam_s2s_auth_microservice}"
   }
 }

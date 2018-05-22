@@ -10,10 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.HttpAction;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.jobs.JobDataKeys;
-import uk.gov.hmcts.reform.sscs.jobscheduler.logging.AppInsights;
 
 @Component
 @PersistJobDataAfterExecution
@@ -24,19 +22,13 @@ public class HttpCallJob implements Job {
 
     private final RestTemplate restTemplate;
     private final ActionExtractor actionExtractor;
-    private final AuthTokenGenerator tokenGenerator;
-    private final AppInsights insights;
 
     public HttpCallJob(
         RestTemplate restTemplate,
-        ActionExtractor actionExtractor,
-        AuthTokenGenerator tokenGenerator,
-        AppInsights insights
+        ActionExtractor actionExtractor
     ) {
         this.restTemplate = restTemplate;
         this.actionExtractor = actionExtractor;
-        this.tokenGenerator = tokenGenerator;
-        this.insights = insights;
     }
 
     @Override
@@ -49,8 +41,7 @@ public class HttpCallJob implements Job {
         Instant start = Instant.now();
 
         try {
-            action = actionExtractor.extract(context)
-                .withHeader("ServiceAuthorization", tokenGenerator.generate());
+            action = actionExtractor.extract(context);
 
             ResponseEntity<String> response =
                 restTemplate
@@ -60,12 +51,8 @@ public class HttpCallJob implements Job {
                         toHttpEntity(action),
                         String.class
                     );
-
-            trackSuccess(jobId, start, context.getMergedJobDataMap().getInt(JobDataKeys.ATTEMPT), action);
-
             logger.info("Job {} executed. Response code: {}", jobId, response.getStatusCodeValue());
         } catch (Exception e) {
-            trackFailure(jobId, start, context.getMergedJobDataMap().getInt(JobDataKeys.ATTEMPT), action);
 
             String errorMessage = String.format("Job failed. Job ID: %s", jobId);
             logger.error(errorMessage, e);
@@ -81,16 +68,4 @@ public class HttpCallJob implements Job {
         return new HttpEntity<>(action.body, httpHeaders);
     }
 
-    private void trackSuccess(String jobId, Instant started, int attempt, HttpAction action) {
-        insights.trackHttpCallJobExecution(Duration.between(started, Instant.now()), true);
-        insights.trackJobDetails(jobId, attempt, action.url, action.method, action.body, true);
-    }
-
-    private void trackFailure(String jobId, Instant started, int attempt, HttpAction action) {
-        insights.trackHttpCallJobExecution(Duration.between(started, Instant.now()), false);
-
-        if (action != null) {
-            insights.trackJobDetails(jobId, attempt, action.url, action.method, action.body, false);
-        }
-    }
 }

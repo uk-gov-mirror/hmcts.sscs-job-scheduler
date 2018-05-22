@@ -25,10 +25,6 @@ variable "jenkins_AAD_objectId" {
   type        = "string"
 }
 
-variable "idam_s2s_auth_microservice" {
-  default = "sscs"
-}
-
 variable "infrastructure_env" {
   default = "dev"
 }

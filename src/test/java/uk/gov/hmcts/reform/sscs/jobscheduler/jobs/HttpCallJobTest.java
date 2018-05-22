@@ -19,7 +19,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
-import uk.gov.hmcts.reform.sscs.jobscheduler.logging.AppInsights;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.HttpAction;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.jobs.JobDataKeys;
 
@@ -70,8 +69,6 @@ public class HttpCallJobTest {
 
     @Mock private ActionExtractor actionExtractor;
     @Mock private JobExecutionContext context;
-    @Mock private AuthTokenGenerator authTokenGenerator;
-    @Mock private AppInsights insights;
 
     @Before
     public void setup() {

@@ -5,13 +5,6 @@ management:
   security:
     enabled: ${MANAGEMENT_SECURITY_ENABLED:true}
 
-idam:
-  s2s-auth:
-    useStub: false
-    url: ${S2S_URL}
-    secret: ${S2S_SECRET}
-    microservice: jobscheduler
-
 spring:
   application:
     name: Job Scheduler
