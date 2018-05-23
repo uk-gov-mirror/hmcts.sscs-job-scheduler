@@ -1,32 +1,27 @@
 language: java
-
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 deploy:
 - provider: script
-  script: ./gradlew bintrayUpload
+  script: "./gradlew bintrayUpload"
   skip_cleanup: true
   on:
     repo: hmcts/sscs-job-scheduler
     tags: true
-
 script:
-  - ./gradlew test
-  - ./gradlew functional
-  - ./gradlew jacocoTestReport
-
+- "./gradlew test"
+- "./gradlew functional"
+- "./gradlew jacocoTestReport"
 after_success:
-  - java -cp ./codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
-  - test "$TRAVIS_BRANCH" = "master" && test "$TRAVIS_PULL_REQUEST" = "false"
-
+- java -cp ./codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter
+  -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
+- test "$TRAVIS_BRANCH" = "master" && test "$TRAVIS_PULL_REQUEST" = "false"
 env:
   global:
-  - secure: dNQOK/jd9gSgv9FMs5ueyuYBEIDyI4Lr4F67BsMj7hjpaSESlalmn3bc3XZ9M167S1G7/6BEN4879llSTrNH3qOOE4GiuRomSVXDn0taKoXjfeGASq20yKZkT/HLrbuv/H/3qa6n+iY0U6pic1urr5ifdIx5ee0hzcFH6pFkBPFlH4DVrlNzzuWj/Og5dDSBBoK7tqX761objzvdN9+wQnw1QYTmCJp4gsh17Ab+9K4w7nfJ5R11UEaSTuE+TboPGtc/xFoUgIEHPz0xGpKZWWbW/bnDltPEbzk3rimv2n0KAeKy9tBQ9s8th4whmij+D5oVLm1Rx9UKIE7ZttgoRXKcrjVo0HyphTWdaQHT8FQE/ejfUkR3DMBcF01FP5gnOWSMxc3sTIT53cf1YpZrz/OaDa/Ragb0wp4VALXmbi5iI+2T//vCRtWyAKp89pRblvgguqlTNe/mJ3tt9eUYW75Ci9RcHCnTnHQIYtzIVQiLm1V9uF1PTNC8lOE7vxKEvLrPcgRc1pRSnq1JPL1cWZPfRzXojhbmjuHeAUFxWmfxEIQ4u+ZB0ypOVe6zPBYI9nATKdWdztQwNCb93NS8PqJeVX0JGk9FgmVWfO2Wcad5U452lS9SehtB0krnNQhIRHcIm5/y1t7XvWysj95fqWGr5uhAnZjkrBDAMxl0ht8=
-  - secure: WUBBdssbRrxbzGUJxbCgt6OqXQl7+73+DNaVNP6wVrO+XL92H1+B9Dwu8OsAg3Nq/jWBqCgFsrobG0J59altLX99RxHhXBxkHT6cHozlFm/NmE0FeHhfzQQvD4qj/9kS2ha07AgOnk/XD1ir/WlgXHJ3IN99rSTH5NMshtRunGrXsHbfCOhu1np85nFyf4+44nw+v8A1ELadOFZ0+WmBAaOZSBAJkTp/EQ2rmcPFNJACWwBWvifh4YCYeSGvJwvdWzGQkR5I6YKObiI++cH9M3Et+f7ZzwtDoCa4zhDYKW4OEXxG5ITFxFEmWqeOTuNFGuTUs/qHI4hCtpn4mkcSIayzSSvuVbLPjwwm7uuUh5oMuAoRr6fkSksboDWxjAt2Uip9vR8PxKziSocID5dZp3xRxIMuGhgTB/933aNLnMeg8sW6W3jlLfG7oCPlJO3X4p8KXY00JjhLnpACOkJWXA38AvH4f8gvKLGHAF17NbWIWKCYSSvRelQjNyZCu+aQbbfXSA6WyMq7xYYXnhR0C5nfQgxvPr9YlEO+9TMpvXEm8DI9m5dkSeso3NwhlVhCzrOsPeIvFBBR08UifPqG3s4QG8GwWIQNry72YGNutLykyl9FyBk59bjWf6aKb34AwjvkwhIBeC+/5lAor5vzsYPjkUE7DSuyJVzAMeqgY9w=
+  - secure: Ohc+mhk+zMh23gi9m7ipwn7cwOLMjtQKR4gxKlLUYRY1bxIk0ukRgOS7b+0CDHAiPp+9Bt4gzmykg8ya9F7t9pEVwvmS8IMcJ7VE5hu7IKUDH1IHH3of4jekFXxfVLX31mTx4/tt1dnQba+bYtaQ5YU/PZKsCKvU1tbVNnQC53zUb7dU2PmoBqxcQVqmJT1rYOrRkngBYFGFE3UIHP7UE3Pwnc2LXt2WP2CQO3IgDmx8+oCd0uG+Udb4gaWHdzojR4j597a631iMJOg0y4Iq5V71yHXzqw6itK/zeEu4mmr10S4AnR3x72FKTkCyCxmXFKA52u5S+qgwLqWM7kGnMrlKk21/uEeQDsw88JKGam+iJm4ZUxksQQLKRYscGaFlTYxoBYRWHlrOdXUraKgXpfgsHX1SY5kz7lAjBCRfL6E6Y63nncgp+0+iZI5xNI80R2Cvvafs+uWasaOl5XsAu6FRmAgPFRggdCnYiDR8O+EaCmwHcsEpeOthS1rB4E6x5B4ZYWkzhA96Ol+LCP/XWQtR9qSNcpfFG2tu76Bk54LLvwcRQeN6vL/oUTLRHW3qoGDLvv2XEa3afpMwD96Ed3lnjJNIQ2/FE+/x/J6L4lTBfdKSBTEIQFp9AverGmaRZgemwB128xmtpVO3aB7TQUuj0E43z2vtYbYqAoIQIjQ=
+  - secure: hjDbvK4Wao+vveafqcsDRqkszyg8JNOutUiDQoKkL+idwVDawCO9pF+eeyTLsuuBzeKQpmmBMIHsajy+Xqv0VtmWx+6ya8QndGWSh4NpBKDFfW2qaga14/YETuiIhXWN/RGGzWm4f6iU4edfp6q1BqdoCvuq3kryw8D9Qketq3BtQNDRQqm7wXe1LpOcPwgCpXAu7b+BxSKRzhU6Up/PzbbG0pxiRpHme2KwYv+K6kU8cpXCeCdHzadv2D0L3oAiC7RzPYjFuJtCGMBixRXy1haDcG0aOq9xhBFqA9sNaGI5RQpWfp0gl3Vu6HuTlvK7W+IVUJS0sKLM6pzT+fkGMARskapXGs2S+xdCZ8TLbvZZGQncGaR3w/n2vLUTG2gtarGyEosc+biMvbnFMnT8WCzFL8BoEt2Qv59EfqYC5+F9r6TkEKaIPrCCPYswC3lBivP9tix4UlluK7O9Macm6K4m6LewFG7tIqL1u12Q2m10hCExFnviyrxTBenb/MY0Y1aNl5Ez2dPWDZkx9sG+vycl9Ls1xuqqnSakpSwK/KcroQhzHtj7DHB4/jkqYRXOdQcS0H4St7/kELanjN6wLAzMrH3BhUcIddqIEvmsBLaCZSALZXVf4ajs0AkyjXbml9VuGm1Nm3EoaLLFPGr6SCa8EmPi7fvNESYW92cwaSA=
