@@ -3,59 +3,13 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/db1d536343474c40967ab9b236044e1d)](https://www.codacy.com/app/HMCTS/sscs-job-scheduler)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/db1d536343474c40967ab9b236044e1d)](https://www.codacy.com/app/HMCTS/sscs-job-scheduler)
 
-The job scheduler micro service allows other services to schedule http actions in the future. For example, scheduler
-can send a POST request to a specified url every Sunday at 2am.
-
-![diagram](docs/diagram.png)
+The job scheduler library allows other services to schedule callbacks in the future. For example, scheduler
+can call back to a specified handler next week Sunday at 2am.
 
 ## Getting started
 
 ### Prerequisites
 - [JDK 8](https://java.com)
-
-### External service dependencies
-
-In order to validate service auth tokens, Job Scheduler sends http requests to S2S Service.  
-URL to S2S can be configured via the config file or using environment variables.  
-S2S Service is currently not open source.
-
-### Running
-Run the application by executing:
-```bash
-./gradlew bootRun
-```
-
-In order to run the application in Docker, execute:
-```bash
-./bin/run-in-docker.sh
-```
-
-For more information:
-
-```bash
-./bin/run-in-docker.sh -h
-```
-
-Script includes bare minimum environment variables necessary to start database and api instances. Whenever any variable is changed or any other script regarding docker image/container build, the suggested way to ensure all is cleaned up properly is by this command:
-
-```bash
-docker-compose rm
-```
-
-It clears stopped containers correctly. Might consider removing clutter of images too, especially the ones fiddled with:
-
-```bash
-docker images
-
-docker image rm <image-id>
-```
-
-There is no need to remove postgres and java images.
-
-## API documentation
-Api documentation is provided with Swagger:
-- json spec: [http://localhost:8484/v2/api-docs](http://localhost:8484/v2/api-docs)
-- swagger UI: [http://localhost:8484/swagger-ui.html](http://localhost:8484/swagger-ui.html)
 
 ## Developing
 
@@ -76,7 +30,7 @@ To run all checks execute the following command:
 
 The service manages its clients' jobs with [Quartz](http://www.quartz-scheduler.org/).  
 Applications importing this project as a JAR will be required to use their own database. 
-This could be a PostgreSQL database for persisting those jobs. Also, Quartz is configured
+This could be a PostgreSQL database for persisting those jobs. Also, Quartz can be configured
 to run in cluster mode, i.e. the load will be distributed among multiple nodes, each
 running different jobs.
 

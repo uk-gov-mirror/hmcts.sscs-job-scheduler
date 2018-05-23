@@ -1,33 +1,31 @@
 language: java
-services:
-- docker
+
 before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-before_install:
-- curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh
-  > publish-swagger-docs.sh
-- sudo apt-get install jq
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
 deploy:
 - provider: script
-  script: "./gradlew bintrayUpload"
+  script: ./gradlew bintrayUpload
   skip_cleanup: true
   on:
     repo: hmcts/sscs-job-scheduler
     tags: true
+
 script:
-- "./gradlew test"
-- "./gradlew functional"
-- "./gradlew jacocoTestReport"
+  - ./gradlew test
+  - ./gradlew functional
+  - ./gradlew jacocoTestReport
+
 after_success:
-- java -cp ./codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter
-  -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
-- test "$TRAVIS_BRANCH" = "master" && test "$TRAVIS_PULL_REQUEST" = "false" && sh
-  ./publish-swagger-docs.sh
+  - java -cp ./codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
+  - test "$TRAVIS_BRANCH" = "master" && test "$TRAVIS_PULL_REQUEST" = "false"
+
 env:
   global:
   - secure: Zsb5yAOIf4IhP9QSiYRL+eJGuyOBedvV2NoLDX3J8zunGYVZVujnJqHGtl4qpMx/VVMDdXJpQmJpbQVHeXQizyEn0SPIK/kqtNv3ann2A9Xu23jDB7kSZ1gY4/ecYS43ttC/zzUb+jCVgaEHr3BhFEDOKNgRPJdiPXREIs9I2gnrEtdVCGo5T7AOeYJmUnnmyQjvqqFVx/pZVIYIw0Ez3EXkMv/Wap9V6cWIrNLvQKdk5pxXjcgdnTEsgd7ZGLcQD2GS897fBAHs1X+4DptoL4/XrEGiA+D+Px4xfOr2ovU7XMLf8+G9e2qNV/mWeahbePyfMHD9JhozZPyi0yY+tk0LTb0KOewyQKyBR0Leneq+6OpGKesfstLqd4y+UTyfLXmCrH4bW3B48Mm3/EG28S4SbNg3XEeshZ1VepsjH2skU+ClomuTKoL4nUIPBxDpBa2JUUtvfxnSOTfpOjUPQLd7/25ZXM7jtFvC08OaC0XF8HqcjsQ8nMbRBBU2FmFP3PwEn4XEk2oK3LmVpcOrTEWC4k+bCJlXgqNwYds3TB9za5YWA6hRr9xRG0CQ22DTysR/dYnWWPm1NwIscvfFw63QwdyPKVCLatoOaDkFkoP+rC71U55FB2Ykbd8ES7kp7ZYZVlgRFvmZQ5aVftYMUblSt0RhZ0n+gbgsYwqovsk=
