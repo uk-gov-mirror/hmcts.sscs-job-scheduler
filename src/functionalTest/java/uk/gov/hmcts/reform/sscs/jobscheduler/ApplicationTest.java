@@ -85,7 +85,7 @@ public class ApplicationTest {
             ZonedDateTime.now().plusSeconds(2)
         );
 
-        String jobId = jobScheduler.create(job);
+        String jobId = jobScheduler.schedule(job);
 
         assertNotNull(jobId);
 
@@ -96,8 +96,6 @@ public class ApplicationTest {
             eq(jobId),
             eq(testPayload)
         );
-
-        assertTrue("Job was removed from Quartz after execution", getScheduledJobCount() == 0);
     }
 
     @Test
@@ -111,7 +109,7 @@ public class ApplicationTest {
             ZonedDateTime.now().plusSeconds(2)
         );
 
-        String jobId = jobScheduler.create(job);
+        String jobId = jobScheduler.schedule(job);
 
         assertNotNull(jobId);
 

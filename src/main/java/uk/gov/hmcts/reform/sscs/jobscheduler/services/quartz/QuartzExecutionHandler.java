@@ -45,10 +45,15 @@ public class QuartzExecutionHandler<T> implements Job {
 
             Instant jobStart = Instant.now();
 
-            String payloadSource =
-                jobDetail
-                    .getJobDataMap()
-                    .getString(JobDataKeys.PAYLOAD);
+            String payloadSource = "";
+
+            if (jobDetail.getJobDataMap().containsKey(JobDataKeys.PAYLOAD)) {
+
+                payloadSource =
+                    jobDetail
+                        .getJobDataMap()
+                        .getString(JobDataKeys.PAYLOAD);
+            }
 
             T payload = jobPayloadDeserializer.deserialize(payloadSource);
 
