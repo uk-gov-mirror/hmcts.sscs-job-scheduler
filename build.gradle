@@ -20,6 +20,20 @@ targetCompatibility = 1.8
 
 def springBootVersion = '1.5.10.RELEASE'
 
+def pomConfig = {
+  licenses {
+    license {
+      name "MIT License"
+      url "http://www.opensource.org/licenses/mit-license.php"
+      distribution "repo"
+    }
+  }
+
+  scm {
+    url "https://github.com/hmcts/sscs-job-scheduler"
+  }
+}
+
 sourceSets {
 
   functionalTest {
@@ -29,14 +43,6 @@ sourceSets {
       srcDir file('src/functionalTest/java')
     }
     resources.srcDir file('src/functionalTest/resources')
-  }
-  smokeTest {
-    java {
-      compileClasspath += main.output
-      runtimeClasspath += main.output
-      srcDir file('src/smokeTest/java')
-    }
-    resources.srcDir file('src/smokeTest/resources')
   }
 }
 
@@ -68,10 +74,6 @@ task functional(type: Test) {
   classpath = sourceSets.functionalTest.runtimeClasspath
 }
 
-compileSmokeTestJava {
-  options.compilerArgs << "-Xlint:unchecked"
-}
-
 checkstyle {
   toolVersion = '8.4'
   // need to set configDir to rootDir otherwise submodule will use submodule/config/checkstyle
@@ -89,17 +91,11 @@ pmd {
 project.tasks['sonarqube'].dependsOn test, functional
 sonarqube {
   properties {
-    property "sonar.projectName", "Reform :: Job Scheduler"
+    property "sonar.projectName", "Reform :: SSCS job scheduler"
     property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
     property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/functional.exec"
     property 'sonar.coverage.exclusions', "**/src/main/java/uk/gov/hmcts/reform/sscs/jobscheduler/config/**"
   }
-}
-
-task smoke(type: Test) {
-  description = "Runs Smoke Tests"
-  testClassesDirs = sourceSets.smokeTest.output.classesDirs
-  classpath = sourceSets.smokeTest.runtimeClasspath
 }
 
 dependencyUpdates.resolutionStrategy = {
@@ -171,7 +167,7 @@ bintray {
 
 def versions = [
   reformLogging: '2.0.2',
-  springBoot      : springBootVersion,
+  springBoot   : springBootVersion,
 ]
 
 dependencies {
@@ -200,10 +196,6 @@ dependencies {
   testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
 
   functionalTestCompile sourceSets.main.runtimeClasspath
-
-  smokeTestCompile sourceSets.main.runtimeClasspath
-  smokeTestCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
-
 }
 
 jar {
