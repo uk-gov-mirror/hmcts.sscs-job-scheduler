@@ -161,4 +161,21 @@
         <gav regex="true">^org\.codehaus\.groovy:groovy-json:.*$</gav>
         <cve>CVE-2016-6497</cve>
     </suppress>
+
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-boot-starter-actuator-1.5.8.RELEASE.jar
+   ]]></notes>
+        <gav regex="true">^org\.springframework\.boot:spring-boot-starter-actuator:.*$</gav>
+        <cve>CVE-2017-8046</cve>
+        <cve>CVE-2018-1196</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-boot-actuator-1.5.8.RELEASE.jar
+   ]]></notes>
+        <gav regex="true">^org\.springframework\.boot:spring-boot-actuator:.*$</gav>
+        <cve>CVE-2017-8046</cve>
+        <cve>CVE-2018-1196</cve>
+    </suppress>
 </suppressions>
