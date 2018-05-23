@@ -4,5 +4,5 @@ import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
 
 public interface JobScheduler<T> {
 
-    String create(Job<T> job);
+    String schedule(Job<T> job);
 }

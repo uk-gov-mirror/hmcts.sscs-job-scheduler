@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz;
 
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
@@ -30,7 +29,7 @@ public class QuartzJobScheduler<T> implements JobScheduler<T> {
         this.jobPayloadSerializer = jobPayloadSerializer;
     }
 
-    public String create(Job<T> job) {
+    public String schedule(Job<T> job) {
         try {
 
             String jobId = UUID.randomUUID().toString();
@@ -50,8 +49,8 @@ public class QuartzJobScheduler<T> implements JobScheduler<T> {
 
             return jobId;
 
-        } catch (SchedulerException exc) {
-            throw new JobException("Error while scheduling job", exc);
+        } catch (Exception e) {
+            throw new JobException("Error while scheduling job", e);
         }
     }
 

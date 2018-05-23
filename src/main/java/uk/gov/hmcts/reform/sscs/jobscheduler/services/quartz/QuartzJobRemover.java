@@ -29,7 +29,7 @@ public class QuartzJobRemover implements JobRemover {
 
         } catch (SchedulerException e) {
             throw new JobException(
-                "Error while deleting job. ID: " + jobId,
+                "Error while removing job. Job ID: " + jobId,
                 e
             );
         }
