@@ -1,0 +1,15 @@
+#!groovy
+@Library("Infrastructure")
+
+def type = "java"
+def product = "sscs-tya"
+def component = "scheduler"
+
+def channel = '#sscs-tech'
+
+withPipeline(type , product, component) {
+    before('build') {
+      sh './gradlew check'
+    }
+    enableSlackNotifications(channel)
+}

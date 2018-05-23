@@ -1,29 +1,29 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.Valid;
+import java.time.ZonedDateTime;
 import javax.validation.constraints.NotNull;
 
-public class Job {
+public class Job<T> {
 
     @NotBlank
     public final String name;
 
-    @Valid
-    public final HttpAction action;
+    @NotNull
+    public final T payload;
 
     @NotNull
-    public final Trigger trigger;
+    public final ZonedDateTime triggerAt;
 
     public Job(
-        @JsonProperty("name") String name,
-        @JsonProperty("action") HttpAction action,
-        @JsonProperty("trigger") Trigger trigger
+        String name,
+        T payload,
+        ZonedDateTime triggerAt
     ) {
         this.name = name;
-        this.action = action;
-        this.trigger = trigger;
+        this.payload = payload;
+        this.triggerAt = triggerAt;
     }
+
 }

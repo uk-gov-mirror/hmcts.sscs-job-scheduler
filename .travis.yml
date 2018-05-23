@@ -12,6 +12,10 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+before_install:
+  - curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh > publish-swagger-docs.sh
+  - sudo apt-get install jq
+
 deploy:
 - provider: script
   script: ./gradlew bintrayUpload

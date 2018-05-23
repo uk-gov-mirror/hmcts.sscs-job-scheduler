@@ -20,6 +20,7 @@ public class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory impleme
 
     @Override
     protected Object createJobInstance(final TriggerFiredBundle bundle) {
+
         Object job = this.beanFactory.autowire(
             bundle.getJobDetail().getJobClass(),
             AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR,
@@ -30,4 +31,5 @@ public class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory impleme
 
         return job;
     }
+
 }
