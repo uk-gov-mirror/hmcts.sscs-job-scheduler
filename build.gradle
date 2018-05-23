@@ -20,6 +20,20 @@ targetCompatibility = 1.8
 
 def springBootVersion = '1.5.10.RELEASE'
 
+def pomConfig = {
+  licenses {
+    license {
+      name "MIT License"
+      url "http://www.opensource.org/licenses/mit-license.php"
+      distribution "repo"
+    }
+  }
+
+  scm {
+    url "https://github.com/hmcts/sscs-job-scheduler"
+  }
+}
+
 sourceSets {
 
   functionalTest {
