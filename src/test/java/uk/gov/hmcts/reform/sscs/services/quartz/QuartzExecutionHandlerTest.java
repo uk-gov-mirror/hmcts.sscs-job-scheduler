@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.sscs.services.quartz;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -11,15 +16,6 @@ import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobExecutor;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadDeserializer;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzExecutionHandler;
-
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
@@ -45,6 +41,7 @@ public class QuartzExecutionHandlerTest {
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
                 when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(true);
@@ -55,6 +52,7 @@ public class QuartzExecutionHandlerTest {
 
                 verify(jobExecutor, times(1)).execute(
                     eq("job-id"),
+                    eq("job-name"),
                     eq("deserialized-payload-stuff")
                 );
             }
@@ -73,6 +71,7 @@ public class QuartzExecutionHandlerTest {
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
                 when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(false);
@@ -82,6 +81,7 @@ public class QuartzExecutionHandlerTest {
 
                 verify(jobExecutor, times(1)).execute(
                     eq("job-id"),
+                    eq("job-name"),
                     eq("whatever")
                 );
             }
@@ -100,11 +100,14 @@ public class QuartzExecutionHandlerTest {
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
                 when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(false);
 
-                doThrow(RuntimeException.class).when(jobPayloadDeserializer).deserialize("");
+                doThrow(RuntimeException.class)
+                    .when(jobPayloadDeserializer)
+                    .deserialize("");
 
                 quartzExecutionHandler.execute(context);
             }
@@ -123,13 +126,16 @@ public class QuartzExecutionHandlerTest {
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
                 when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(true);
                 when(jobDataMap.getString(JobDataKeys.PAYLOAD)).thenReturn("payload-stuff");
                 when(jobPayloadDeserializer.deserialize("payload-stuff")).thenReturn("deserialized-payload-stuff");
 
-                doThrow(RuntimeException.class).when(jobExecutor).execute("job-id", "deserialized-payload-stuff");
+                doThrow(RuntimeException.class)
+                    .when(jobExecutor)
+                    .execute("job-id", "job-name", "deserialized-payload-stuff");
 
                 quartzExecutionHandler.execute(context);
             }

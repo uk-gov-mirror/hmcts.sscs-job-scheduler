@@ -1,19 +1,13 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz;
 
-import org.quartz.DisallowConcurrentExecution;
-import org.quartz.Job;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.PersistJobDataAfterExecution;
+import java.time.Instant;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobExecutor;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadDeserializer;
-
-import java.time.Instant;
 
 @Component
 @DisallowConcurrentExecution
@@ -37,6 +31,7 @@ public class QuartzExecutionHandler<T> implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
         JobDetail jobDetail = context.getJobDetail();
+        String jobName = jobDetail.getDescription();
         String jobId = jobDetail.getKey().getName();
 
         log.info("Executing job {}", jobId);
@@ -57,7 +52,7 @@ public class QuartzExecutionHandler<T> implements Job {
 
             T payload = jobPayloadDeserializer.deserialize(payloadSource);
 
-            jobExecutor.execute(jobId, payload);
+            jobExecutor.execute(jobId, jobName, payload);
 
             log.info(
                 "Job {} executed in {}ms.",
