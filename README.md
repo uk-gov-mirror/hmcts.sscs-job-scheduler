@@ -34,6 +34,36 @@ This could be a PostgreSQL database for persisting those jobs. Also, Quartz can 
 to run in cluster mode, i.e. the load will be distributed among multiple nodes, each
 running different jobs.
 
+## Configuration Example
+
+```
+
+job.scheduler:
+  quartzProperties:
+    org.quartz:
+      scheduler:
+        instanceId: AUTO
+      dataSource:
+        jobscheduler:
+          driver: org.postgresql.Driver
+          URL: ${spring.datasource.url}
+          user: ${spring.datasource.username}
+          password: ${spring.datasource.password}
+      jobStore:
+        isClustered: true
+        class: org.quartz.impl.jdbcjobstore.JobStoreTX
+        driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+        dataSource: sscsjobscheduler
+      threadPool:
+        class: org.quartz.simpl.SimpleThreadPool
+        threadCount: 8
+
+  retryPolicy:
+    maxNumberOfJobExecutions: ${MAX_NUMBER_OF_JOB_EXECUTIONS:5}
+    delayBetweenAttemptsInMs: ${DELAY_BETWEEN_JOB_ATTEMPTS_MS:15000}
+
+```
+
 ## Data security
 
 As of now, job information is stored in an unencrypted form. This means that clients
