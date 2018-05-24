@@ -36,13 +36,13 @@ def pomConfig = {
 
 sourceSets {
 
-  functionalTest {
+  integrationTest {
     java {
       compileClasspath += main.output
       runtimeClasspath += main.output
-      srcDir file('src/functionalTest/java')
+      srcDir file('src/integrationTest/java')
     }
-    resources.srcDir file('src/functionalTest/resources')
+    resources.srcDir file('src/integrationTest/resources')
   }
 }
 
@@ -64,14 +64,14 @@ compileTestJava {
   options.compilerArgs << "-Xlint:unchecked"
 }
 
-compileFunctionalTestJava {
+compileIntegrationTestJava {
   options.compilerArgs << "-Xlint:unchecked"
 }
 
-task functional(type: Test) {
-  description = "Runs Functional Tests"
-  testClassesDirs = sourceSets.functionalTest.output.classesDirs
-  classpath = sourceSets.functionalTest.runtimeClasspath
+task integration(type: Test) {
+  description = "Runs Integration Tests"
+  testClassesDirs = sourceSets.integrationTest.output.classesDirs
+  classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
 checkstyle {
@@ -83,17 +83,17 @@ checkstyle {
 pmd {
   toolVersion = "5.8.1"
   ignoreFailures = true
-  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest]
+  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.integrationTest]
   reportsDir = file("$project.buildDir/reports/pmd")
   ruleSetFiles = files("config/pmd/ruleset.xml")
 }
 
-project.tasks['sonarqube'].dependsOn test, functional
+project.tasks['sonarqube'].dependsOn test, integration
 sonarqube {
   properties {
     property "sonar.projectName", "Reform :: SSCS job scheduler"
     property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
-    property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/functional.exec"
+    property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/integration.exec"
     property 'sonar.coverage.exclusions', "**/src/main/java/uk/gov/hmcts/reform/sscs/jobscheduler/config/**"
   }
 }
@@ -193,7 +193,7 @@ dependencies {
   testCompile group: 'org.json', name: 'json', version: '20171018'
   testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
 
-  functionalTestCompile sourceSets.main.runtimeClasspath
+  integrationTestCompile sourceSets.main.runtimeClasspath
 }
 
 jar {
