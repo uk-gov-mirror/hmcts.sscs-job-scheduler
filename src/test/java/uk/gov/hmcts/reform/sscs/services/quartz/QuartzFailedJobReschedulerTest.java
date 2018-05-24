@@ -1,32 +1,23 @@
 package uk.gov.hmcts.reform.sscs.services.quartz;
 
-import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzFailedJobRescheduler;
-import wiremock.com.google.common.collect.Maps;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.quartz.JobBuilder.newJob;
+
+import com.google.common.collect.ImmutableMap;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.quartz.*;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzFailedJobRescheduler;
+import wiremock.com.google.common.collect.Maps;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuartzFailedJobReschedulerTest {

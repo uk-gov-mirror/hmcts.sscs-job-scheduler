@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz;
 
+import static org.quartz.TriggerBuilder.newTrigger;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
@@ -7,12 +12,6 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
-
-import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Listens for failed jobs and schedules their re-execution.

@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import java.time.ZonedDateTime;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotBlank;
 
 public class Job<T> {
 

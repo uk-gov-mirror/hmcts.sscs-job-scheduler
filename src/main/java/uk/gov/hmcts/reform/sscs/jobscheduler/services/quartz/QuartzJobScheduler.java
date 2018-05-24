@@ -1,5 +1,11 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz;
 
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
+
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.UUID;
 import org.quartz.Scheduler;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
@@ -7,13 +13,6 @@ import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobException;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadSerializer;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobScheduler;
-
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.UUID;
-
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 @Service
 public class QuartzJobScheduler<T> implements JobScheduler<T> {

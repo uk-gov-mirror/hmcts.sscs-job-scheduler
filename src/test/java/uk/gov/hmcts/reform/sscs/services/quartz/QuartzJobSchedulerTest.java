@@ -1,5 +1,13 @@
 package uk.gov.hmcts.reform.sscs.services.quartz;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
+import java.time.ZonedDateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -12,19 +20,6 @@ import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobException;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadSerializer;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzJobScheduler;
-
-import java.time.ZonedDateTime;
-
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")

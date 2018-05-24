@@ -1,5 +1,14 @@
 package uk.gov.hmcts.reform.sscs.jobscheduler;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.after;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
+
+import java.time.ZonedDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,22 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobExecutor;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadDeserializer;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadSerializer;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobRemover;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobScheduler;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobService;
-
-import java.time.ZonedDateTime;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.after;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringBootContextRoot.class)
@@ -79,8 +73,10 @@ public class ApplicationTest {
 
         assertTrue("Job scheduler is empty at start", getScheduledJobCount() == 0);
 
+        String jobName = "test-job";
+
         Job<TestPayload> job = new Job<>(
-            "test-job",
+            jobName,
             testPayload,
             ZonedDateTime.now().plusSeconds(2)
         );
@@ -94,6 +90,7 @@ public class ApplicationTest {
         // job is executed
         verify(jobExecutor, timeout(10000)).execute(
             eq(jobId),
+            eq(jobName),
             eq(testPayload)
         );
     }
@@ -103,8 +100,10 @@ public class ApplicationTest {
 
         assertTrue("Job scheduler is empty at start", getScheduledJobCount() == 0);
 
+        String jobName = "test-job";
+
         Job<TestPayload> job = new Job<>(
-            "test-job",
+            jobName,
             testPayload,
             ZonedDateTime.now().plusSeconds(2)
         );
@@ -122,6 +121,7 @@ public class ApplicationTest {
         // job is /never/ executed
         verify(jobExecutor, after(10000).never()).execute(
             eq(jobId),
+            eq(jobName),
             eq(testPayload)
         );
     }
