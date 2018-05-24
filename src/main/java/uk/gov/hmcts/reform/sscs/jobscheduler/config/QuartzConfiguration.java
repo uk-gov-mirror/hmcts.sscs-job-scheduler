@@ -18,7 +18,7 @@ import java.util.Properties;
 import javax.inject.Singleton;
 
 @Configuration
-@ConfigurationProperties
+@ConfigurationProperties(prefix = "job.scheduler")
 public class QuartzConfiguration {
 
     private final Map<String, String> quartzProperties = new HashMap<>();
@@ -52,8 +52,8 @@ public class QuartzConfiguration {
     @Singleton
     public Scheduler scheduler(
         SchedulerFactoryBean factory,
-        @Value("${retryPolicy.maxNumberOfJobExecutions}") int maxJobExecutionAttempts,
-        @Value("${retryPolicy.delayBetweenAttemptsInMs}") long delayBetweenAttemptsInMs
+        @Value("${job.scheduler.retryPolicy.maxNumberOfJobExecutions}") int maxJobExecutionAttempts,
+        @Value("${job.scheduler.retryPolicy.delayBetweenAttemptsInMs}") long delayBetweenAttemptsInMs
     ) throws SchedulerException {
 
         Scheduler scheduler = factory.getScheduler();
