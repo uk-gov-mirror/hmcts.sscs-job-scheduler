@@ -53,7 +53,7 @@ job.scheduler:
         isClustered: true
         class: org.quartz.impl.jdbcjobstore.JobStoreTX
         driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-        dataSource: sscsjobscheduler
+        dataSource: jobscheduler
       threadPool:
         class: org.quartz.simpl.SimpleThreadPool
         threadCount: 8
