@@ -31,8 +31,9 @@ public class QuartzExecutionHandler<T> implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
         JobDetail jobDetail = context.getJobDetail();
-        String jobName = jobDetail.getDescription();
         String jobId = jobDetail.getKey().getName();
+        String jobGroup = jobDetail.getKey().getGroup();
+        String jobName = jobDetail.getDescription();
 
         log.info("Executing job {}", jobId);
 
@@ -52,7 +53,7 @@ public class QuartzExecutionHandler<T> implements Job {
 
             T payload = jobPayloadDeserializer.deserialize(payloadSource);
 
-            jobExecutor.execute(jobId, jobName, payload);
+            jobExecutor.execute(jobId, jobGroup, jobName, payload);
 
             log.info(
                 "Job {} executed in {}ms.",

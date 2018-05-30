@@ -35,7 +35,7 @@ public class QuartzJobScheduler<T> implements JobScheduler<T> {
 
             scheduler.scheduleJob(
                 newJob(QuartzExecutionHandler.class)
-                    .withIdentity(jobId)
+                    .withIdentity(jobId, job.group)
                     .withDescription(job.name)
                     .usingJobData(
                         JobDataKeys.PAYLOAD,

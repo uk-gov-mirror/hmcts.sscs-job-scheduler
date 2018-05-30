@@ -4,9 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.after;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import java.time.ZonedDateTime;
 import org.junit.Before;
@@ -73,9 +71,11 @@ public class ApplicationTest {
 
         assertTrue("Job scheduler is empty at start", getScheduledJobCount() == 0);
 
-        String jobName = "test-job";
+        String jobGroup = "test-job-group";
+        String jobName = "test-job-name";
 
         Job<TestPayload> job = new Job<>(
+            jobGroup,
             jobName,
             testPayload,
             ZonedDateTime.now().plusSeconds(2)
@@ -90,19 +90,74 @@ public class ApplicationTest {
         // job is executed
         verify(jobExecutor, timeout(10000)).execute(
             eq(jobId),
+            eq(jobGroup),
             eq(jobName),
             eq(testPayload)
         );
     }
 
     @Test
-    public void jobIsScheduledAndThenRemoved() {
+    public void jobIsScheduledAndThenRemovedByGroup() {
 
         assertTrue("Job scheduler is empty at start", getScheduledJobCount() == 0);
 
-        String jobName = "test-job";
+        String jobGroup = "test-job-group";
+        String jobName = "test-job-name";
+
+        Job<TestPayload> job1 = new Job<>(
+            jobGroup,
+            jobName,
+            testPayload,
+            ZonedDateTime.now().plusSeconds(2)
+        );
+
+        String jobId1 = jobScheduler.schedule(job1);
+
+        assertNotNull(jobId1);
+
+        Job<TestPayload> job2 = new Job<>(
+            jobGroup,
+            jobName,
+            testPayload,
+            ZonedDateTime.now().plusSeconds(2)
+        );
+
+        String jobId2 = jobScheduler.schedule(job2);
+
+        assertNotNull(jobId2);
+
+        assertTrue("Jobs were scheduled into Quartz", getScheduledJobCount() == 2);
+
+        jobRemover.removeGroup(jobGroup);
+
+        assertTrue("Jobs were removed from Quartz after execution", getScheduledJobCount() == 0);
+
+        // jobs are /never/ executed
+        verify(jobExecutor, after(10000).never()).execute(
+            eq(jobId1),
+            eq(jobGroup),
+            eq(jobName),
+            eq(testPayload)
+        );
+
+        verify(jobExecutor, after(10000).never()).execute(
+            eq(jobId2),
+            eq(jobGroup),
+            eq(jobName),
+            eq(testPayload)
+        );
+    }
+
+    @Test
+    public void jobIsScheduledAndThenRemovedById() {
+
+        assertTrue("Job scheduler is empty at start", getScheduledJobCount() == 0);
+
+        String jobGroup = "test-job-group";
+        String jobName = "test-job-name";
 
         Job<TestPayload> job = new Job<>(
+            jobGroup,
             jobName,
             testPayload,
             ZonedDateTime.now().plusSeconds(2)
@@ -114,13 +169,14 @@ public class ApplicationTest {
 
         assertTrue("Job was scheduled into Quartz", getScheduledJobCount() == 1);
 
-        jobRemover.remove(jobId);
+        jobRemover.remove(jobId, jobGroup);
 
         assertTrue("Job was removed from Quartz after execution", getScheduledJobCount() == 0);
 
         // job is /never/ executed
         verify(jobExecutor, after(10000).never()).execute(
             eq(jobId),
+            eq(jobGroup),
             eq(jobName),
             eq(testPayload)
         );

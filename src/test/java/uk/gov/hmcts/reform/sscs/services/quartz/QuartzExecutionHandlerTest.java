@@ -40,7 +40,7 @@ public class QuartzExecutionHandlerTest {
                 JobDataMap jobDataMap = mock(JobDataMap.class);
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
-                when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getKey()).thenReturn(new JobKey("job-id", "job-group"));
                 when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
@@ -52,6 +52,7 @@ public class QuartzExecutionHandlerTest {
 
                 verify(jobExecutor, times(1)).execute(
                     eq("job-id"),
+                    eq("job-group"),
                     eq("job-name"),
                     eq("deserialized-payload-stuff")
                 );
@@ -70,7 +71,7 @@ public class QuartzExecutionHandlerTest {
                 JobDataMap jobDataMap = mock(JobDataMap.class);
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
-                when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getKey()).thenReturn(new JobKey("job-id", "job-group"));
                 when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
@@ -81,6 +82,7 @@ public class QuartzExecutionHandlerTest {
 
                 verify(jobExecutor, times(1)).execute(
                     eq("job-id"),
+                    eq("job-group"),
                     eq("job-name"),
                     eq("whatever")
                 );
@@ -99,7 +101,7 @@ public class QuartzExecutionHandlerTest {
                 JobDataMap jobDataMap = mock(JobDataMap.class);
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
-                when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getKey()).thenReturn(new JobKey("job-id", "job-group"));
                 when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
@@ -125,7 +127,7 @@ public class QuartzExecutionHandlerTest {
                 JobDataMap jobDataMap = mock(JobDataMap.class);
 
                 when(context.getJobDetail()).thenReturn(jobDetail);
-                when(jobDetail.getKey()).thenReturn(new JobKey("job-id"));
+                when(jobDetail.getKey()).thenReturn(new JobKey("job-id", "job-group"));
                 when(jobDetail.getDescription()).thenReturn("job-name");
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
@@ -135,7 +137,12 @@ public class QuartzExecutionHandlerTest {
 
                 doThrow(RuntimeException.class)
                     .when(jobExecutor)
-                    .execute("job-id", "job-name", "deserialized-payload-stuff");
+                    .execute(
+                        "job-id",
+                        "job-group",
+                        "job-name",
+                        "deserialized-payload-stuff"
+                    );
 
                 quartzExecutionHandler.execute(context);
             }

@@ -38,11 +38,13 @@ public class QuartzJobSchedulerTest {
         assertThatCode(
             () -> {
 
-                String jobName = "test-job";
+                String jobGroup = "test-job-group";
+                String jobName = "test-job-name";
                 String jobPayload = "payload";
                 ZonedDateTime triggerAt = ZonedDateTime.now();
 
                 Job<String> job = new Job<>(
+                    jobGroup,
                     jobName,
                     jobPayload,
                     triggerAt
@@ -63,8 +65,9 @@ public class QuartzJobSchedulerTest {
 
                 JobDetail actualJobDetail = jobDetailCaptor.getValue();
                 assertEquals(actualJobId, actualJobDetail.getKey().getName());
+                assertEquals(jobGroup, actualJobDetail.getKey().getGroup());
                 assertEquals(jobName, actualJobDetail.getDescription());
-                assertTrue(jobName, actualJobDetail.getJobDataMap().containsKey(JobDataKeys.PAYLOAD));
+                assertTrue(actualJobDetail.getJobDataMap().containsKey(JobDataKeys.PAYLOAD));
                 assertEquals("serialized-payload", actualJobDetail.getJobDataMap().get(JobDataKeys.PAYLOAD));
 
                 Trigger actualTrigger = triggerCaptor.getValue();
@@ -79,11 +82,13 @@ public class QuartzJobSchedulerTest {
         assertThatThrownBy(
             () -> {
 
+                String jobGroup = "test-job-group";
                 String jobName = "test-job";
                 String jobPayload = "payload";
                 ZonedDateTime triggerAt = ZonedDateTime.now();
 
                 Job<String> job = new Job<>(
+                    jobGroup,
                     jobName,
                     jobPayload,
                     triggerAt
@@ -105,11 +110,13 @@ public class QuartzJobSchedulerTest {
         assertThatThrownBy(
             () -> {
 
+                String jobGroup = "test-job-group";
                 String jobName = "test-job";
                 String jobPayload = "payload";
                 ZonedDateTime triggerAt = ZonedDateTime.now();
 
                 Job<String> job = new Job<>(
+                    jobGroup,
                     jobName,
                     jobPayload,
                     triggerAt
