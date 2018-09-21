@@ -11,36 +11,32 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobException;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadSerializer;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobScheduler;
 
 @Service
-public class QuartzJobScheduler<T> implements JobScheduler<T> {
+public class QuartzJobScheduler implements JobScheduler{
 
     private final Scheduler scheduler;
-    private final JobPayloadSerializer<T> jobPayloadSerializer;
 
-    public QuartzJobScheduler(
-        Scheduler scheduler,
-        JobPayloadSerializer<T> jobPayloadSerializer
-    ) {
+    private final JobClassMapper jobClassMapper;
+
+    public QuartzJobScheduler(Scheduler scheduler, JobClassMapper jobClassMapper) {
         this.scheduler = scheduler;
-        this.jobPayloadSerializer = jobPayloadSerializer;
+        this.jobClassMapper = jobClassMapper;
     }
 
-    public String schedule(Job<T> job) {
+    public <T> String schedule(Job<T> job) {
         try {
-
             String jobId = UUID.randomUUID().toString();
+
+            Class<T> aClass = (Class<T>) job.payload.getClass();
+            JobClassMapping<T> jobMapping = jobClassMapper.getJobMapping(aClass);
 
             scheduler.scheduleJob(
                 newJob(QuartzExecutionHandler.class)
                     .withIdentity(jobId, job.group)
                     .withDescription(job.name)
-                    .usingJobData(
-                        JobDataKeys.PAYLOAD,
-                        jobPayloadSerializer.serialize(job.payload)
-                    )
+                    .usingJobData(JobDataKeys.PAYLOAD, jobMapping.serialize(job.payload))
                     .requestRecovery()
                     .build(),
                 toQuartzTrigger(job.triggerAt)

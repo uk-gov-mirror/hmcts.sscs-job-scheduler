@@ -18,19 +18,20 @@ import org.quartz.Trigger;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobException;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadSerializer;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobClassMapper;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobClassMapping;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzJobScheduler;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
 public class QuartzJobSchedulerTest {
 
-    private final JobPayloadSerializer jobPayloadSerializer = mock(JobPayloadSerializer.class);
     private final Scheduler scheduler = mock(Scheduler.class);
-    private final QuartzJobScheduler<String> quartzJobScheduler = new QuartzJobScheduler<>(
-        scheduler,
-        jobPayloadSerializer
+    private final JobClassMapper jobClassMapper = mock(JobClassMapper.class);
+    private final QuartzJobScheduler quartzJobScheduler = new QuartzJobScheduler(
+        scheduler, jobClassMapper
     );
+    private final JobClassMapping jobClassMapping = mock(JobClassMapping.class);
 
     @Test
     public void job_is_scheduled() {
@@ -50,8 +51,8 @@ public class QuartzJobSchedulerTest {
                     triggerAt
                 );
 
-                when(jobPayloadSerializer.serialize(jobPayload))
-                    .thenReturn("serialized-payload");
+                when(jobClassMapper.getJobMapping(String.class)).thenReturn(jobClassMapping);
+                when(jobClassMapping.serialize(jobPayload)).thenReturn("serialized-payload");
 
                 String actualJobId = quartzJobScheduler.schedule(job);
 
@@ -94,8 +95,9 @@ public class QuartzJobSchedulerTest {
                     triggerAt
                 );
 
+                when(jobClassMapper.getJobMapping(String.class)).thenReturn(jobClassMapping);
                 doThrow(RuntimeException.class)
-                    .when(jobPayloadSerializer)
+                    .when(jobClassMapping)
                     .serialize(jobPayload);
 
                 quartzJobScheduler.schedule(job);
@@ -122,8 +124,8 @@ public class QuartzJobSchedulerTest {
                     triggerAt
                 );
 
-                when(jobPayloadSerializer.serialize(jobPayload))
-                    .thenReturn("serialized-payload");
+                when(jobClassMapper.getJobMapping(String.class)).thenReturn(jobClassMapping);
+                when(jobClassMapping.serialize(jobPayload)).thenReturn("serialized-payload");
 
                 doThrow(RuntimeException.class)
                     .when(scheduler)
@@ -134,5 +136,4 @@ public class QuartzJobSchedulerTest {
         ).hasMessage("Error while scheduling job")
             .isExactlyInstanceOf(JobException.class);
     }
-
 }
