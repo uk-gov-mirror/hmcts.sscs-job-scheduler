@@ -21,6 +21,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.*;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobClassMapper;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobClassMapping;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobMapper;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobMapping;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringBootContextRoot.class)
@@ -35,7 +39,7 @@ public class ApplicationTest {
     private JobService jobService;
 
     @Autowired
-    private JobScheduler<TestPayload> jobScheduler;
+    private JobScheduler jobScheduler;
 
     @Autowired
     private JobRemover jobRemover;
@@ -48,6 +52,12 @@ public class ApplicationTest {
 
     @MockBean
     private JobExecutor<TestPayload> jobExecutor;
+
+    @MockBean
+    private JobClassMapper jobClassMapper;
+
+    @MockBean
+    private JobMapper jobMapper;
 
     TestPayload testPayload = new TestPayload();
 
@@ -64,6 +74,9 @@ public class ApplicationTest {
 
         given(jobPayloadSerializer.serialize(testPayload)).willReturn("serialized-payload");
         given(jobPayloadDeserializer.deserialize("serialized-payload")).willReturn(testPayload);
+
+        given(jobClassMapper.getJobMapping(TestPayload.class)).willReturn(new JobClassMapping<>(TestPayload.class, jobPayloadSerializer));
+        given(jobMapper.getJobMapping(any())).willReturn(new JobMapping<>(x -> true, jobPayloadDeserializer, jobExecutor));
     }
 
     @Test

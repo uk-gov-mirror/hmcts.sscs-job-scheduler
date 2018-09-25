@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.sscs.jobscheduler.services;
 
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.Job;
 
-public interface JobScheduler<T> {
+public interface JobScheduler {
 
-    String schedule(Job<T> job);
+    <T> String schedule(Job<T> job);
 }

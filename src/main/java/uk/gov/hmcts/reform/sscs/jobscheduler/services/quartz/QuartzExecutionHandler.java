@@ -6,25 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobExecutor;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadDeserializer;
 
 @Component
 @DisallowConcurrentExecution
 @PersistJobDataAfterExecution
-public class QuartzExecutionHandler<T> implements Job {
+public class QuartzExecutionHandler implements Job {
 
     private static final Logger log = LoggerFactory.getLogger(QuartzExecutionHandler.class);
 
-    private final JobPayloadDeserializer<T> jobPayloadDeserializer;
-    private final JobExecutor<T> jobExecutor;
+    private final JobMapper jobMapper;
 
-    public QuartzExecutionHandler(
-        JobPayloadDeserializer<T> jobPayloadDeserializer,
-        JobExecutor<T> jobExecutor
-    ) {
-        this.jobPayloadDeserializer = jobPayloadDeserializer;
-        this.jobExecutor = jobExecutor;
+    public QuartzExecutionHandler(JobMapper jobMapper) {
+        this.jobMapper = jobMapper;
     }
 
     @Override
@@ -51,9 +44,8 @@ public class QuartzExecutionHandler<T> implements Job {
                         .getString(JobDataKeys.PAYLOAD);
             }
 
-            T payload = jobPayloadDeserializer.deserialize(payloadSource);
-
-            jobExecutor.execute(jobId, jobGroup, jobName, payload);
+            JobMapping jobMapping = jobMapper.getJobMapping(payloadSource);
+            jobMapping.execute(jobId, jobGroup, jobName, payloadSource);
 
             log.info(
                 "Job {} executed in {}ms.",

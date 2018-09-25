@@ -13,21 +13,16 @@ import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import uk.gov.hmcts.reform.sscs.jobscheduler.model.JobDataKeys;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobExecutor;
-import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobPayloadDeserializer;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobMapper;
+import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobMapping;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzExecutionHandler;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
 public class QuartzExecutionHandlerTest {
 
-    private final JobPayloadDeserializer jobPayloadDeserializer = mock(JobPayloadDeserializer.class);
-    private final JobExecutor jobExecutor = mock(JobExecutor.class);
-    private final QuartzExecutionHandler quartzExecutionHandler =
-        new QuartzExecutionHandler(
-            jobPayloadDeserializer,
-            jobExecutor
-        );
+    private JobMapper jobMapper = mock(JobMapper.class);
+    private final QuartzExecutionHandler quartzExecutionHandler = new QuartzExecutionHandler(jobMapper);
 
     @Test
     public void execute_deserializes_payload_and_delegates_execution() {
@@ -46,15 +41,16 @@ public class QuartzExecutionHandlerTest {
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(true);
                 when(jobDataMap.getString(JobDataKeys.PAYLOAD)).thenReturn("payload-stuff");
-                when(jobPayloadDeserializer.deserialize("payload-stuff")).thenReturn("deserialized-payload-stuff");
+                JobMapping jobMapping = mock(JobMapping.class);
+                when(jobMapper.getJobMapping("payload-stuff")).thenReturn(jobMapping);
 
                 quartzExecutionHandler.execute(context);
 
-                verify(jobExecutor, times(1)).execute(
+                verify(jobMapping, times(1)).execute(
                     eq("job-id"),
                     eq("job-group"),
                     eq("job-name"),
-                    eq("deserialized-payload-stuff")
+                    eq("payload-stuff")
                 );
             }
         ).doesNotThrowAnyException();
@@ -76,15 +72,16 @@ public class QuartzExecutionHandlerTest {
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(false);
-                when(jobPayloadDeserializer.deserialize("")).thenReturn("whatever");
+                JobMapping jobMapping = mock(JobMapping.class);
+                when(jobMapper.getJobMapping("")).thenReturn(jobMapping);
 
                 quartzExecutionHandler.execute(context);
 
-                verify(jobExecutor, times(1)).execute(
+                verify(jobMapping, times(1)).execute(
                     eq("job-id"),
                     eq("job-group"),
                     eq("job-name"),
-                    eq("whatever")
+                    eq("")
                 );
             }
         ).doesNotThrowAnyException();
@@ -106,47 +103,15 @@ public class QuartzExecutionHandlerTest {
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(false);
+                JobMapping jobMapping = mock(JobMapping.class);
+                when(jobMapper.getJobMapping("payload-stuff")).thenReturn(jobMapping);
 
                 doThrow(RuntimeException.class)
-                    .when(jobPayloadDeserializer)
-                    .deserialize("");
+                    .when(jobMapping)
+                    .execute("job-id", "job-group", "job-name", "payload-stuff");
 
                 quartzExecutionHandler.execute(context);
             }
         ).hasMessage("Job failed. Job ID: job-id");
     }
-
-    @Test
-    public void execute_wraps_exception_from_client_executor() {
-
-        assertThatThrownBy(
-            () -> {
-
-                JobExecutionContext context = mock(JobExecutionContext.class);
-                JobDetail jobDetail = mock(JobDetail.class);
-                JobDataMap jobDataMap = mock(JobDataMap.class);
-
-                when(context.getJobDetail()).thenReturn(jobDetail);
-                when(jobDetail.getKey()).thenReturn(new JobKey("job-id", "job-group"));
-                when(jobDetail.getDescription()).thenReturn("job-name");
-                when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
-
-                when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(true);
-                when(jobDataMap.getString(JobDataKeys.PAYLOAD)).thenReturn("payload-stuff");
-                when(jobPayloadDeserializer.deserialize("payload-stuff")).thenReturn("deserialized-payload-stuff");
-
-                doThrow(RuntimeException.class)
-                    .when(jobExecutor)
-                    .execute(
-                        "job-id",
-                        "job-group",
-                        "job-name",
-                        "deserialized-payload-stuff"
-                    );
-
-                quartzExecutionHandler.execute(context);
-            }
-        ).hasMessage("Job failed. Job ID: job-id");
-    }
-
 }

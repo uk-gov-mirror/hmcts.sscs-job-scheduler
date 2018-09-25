@@ -29,5 +29,4 @@ public class Job<T> {
         this.payload = payload;
         this.triggerAt = triggerAt;
     }
-
 }
