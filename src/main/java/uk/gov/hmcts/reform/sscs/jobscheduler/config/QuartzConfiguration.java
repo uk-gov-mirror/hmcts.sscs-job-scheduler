@@ -35,7 +35,8 @@ public class QuartzConfiguration {
     }
 
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(JobFactory jobFactory) {
+    public SchedulerFactoryBean schedulerFactoryBean(JobFactory jobFactory,
+                                                     @Value("${job.scheduler.autoStart:true}") boolean autoStart) {
 
         Properties properties = new Properties();
         properties.putAll(quartzProperties);
@@ -43,6 +44,7 @@ public class QuartzConfiguration {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setJobFactory(jobFactory);
         schedulerFactory.setQuartzProperties(properties);
+        schedulerFactory.setAutoStartup(autoStart);
 
         return schedulerFactory;
     }
