@@ -43,6 +43,7 @@ public class QuartzConfiguration {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setJobFactory(jobFactory);
         schedulerFactory.setQuartzProperties(properties);
+        schedulerFactory.setAutoStartup(false);
 
         return schedulerFactory;
     }
@@ -51,6 +52,7 @@ public class QuartzConfiguration {
     @Singleton
     public Scheduler scheduler(
         SchedulerFactoryBean factory,
+        @Value("${job.scheduler.autoStart:true}") boolean autoStart,
         @Value("${job.scheduler.retryPolicy.maxNumberOfJobExecutions}") int maxJobExecutionAttempts,
         @Value("${job.scheduler.retryPolicy.delayBetweenAttemptsInMs}") long delayBetweenAttemptsInMs
     ) throws SchedulerException {
@@ -63,7 +65,10 @@ public class QuartzConfiguration {
         );
 
         scheduler.getListenerManager().addJobListener(failedJobRescheduler);
-        scheduler.start();
+
+        if (autoStart) {
+            scheduler.start();
+        }
 
         return scheduler;
     }
