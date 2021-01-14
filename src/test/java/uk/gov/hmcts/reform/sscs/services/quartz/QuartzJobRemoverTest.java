@@ -116,9 +116,6 @@ public class QuartzJobRemoverTest {
 
                 List<JobKey> jobKeysFoundAsList = new ArrayList<>(jobKeysFoundAsSet);
 
-                when(scheduler.deleteJobs(jobKeysFoundAsList))
-                    .thenReturn(true);
-
                 quartzJobRemover.removeGroup(jobGroup);
 
                 verify(scheduler, never()).deleteJobs(
@@ -145,9 +142,6 @@ public class QuartzJobRemoverTest {
                     .thenReturn(jobKeysFoundAsSet);
 
                 List<JobKey> jobKeysFoundAsList = new ArrayList<>(jobKeysFoundAsSet);
-
-                when(scheduler.deleteJobs(jobKeysFoundAsList))
-                    .thenReturn(false);
 
                 quartzJobRemover.removeGroup(jobGroup);
 

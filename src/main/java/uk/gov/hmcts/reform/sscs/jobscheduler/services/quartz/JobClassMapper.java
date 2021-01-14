@@ -8,6 +8,7 @@ public class JobClassMapper {
     public JobClassMapper(List<JobClassMapping> jobMappings) {
         this.jobMappings = jobMappings;
     }
+
     public <T> JobClassMapping<T> getJobMapping(Class<T> payload) {
         return jobMappings.stream()
                 .filter(jobMapping -> jobMapping.canHandle(payload))

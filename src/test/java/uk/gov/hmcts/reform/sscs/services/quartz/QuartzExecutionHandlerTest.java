@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
@@ -103,12 +103,6 @@ public class QuartzExecutionHandlerTest {
                 when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
 
                 when(jobDataMap.containsKey(JobDataKeys.PAYLOAD)).thenReturn(false);
-                JobMapping jobMapping = mock(JobMapping.class);
-                when(jobMapper.getJobMapping("payload-stuff")).thenReturn(jobMapping);
-
-                doThrow(RuntimeException.class)
-                    .when(jobMapping)
-                    .execute("job-id", "job-group", "job-name", "payload-stuff");
 
                 quartzExecutionHandler.execute(context);
             }

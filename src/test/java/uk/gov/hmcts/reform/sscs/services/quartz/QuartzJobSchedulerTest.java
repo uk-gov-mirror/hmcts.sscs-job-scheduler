@@ -72,7 +72,7 @@ public class QuartzJobSchedulerTest {
                 assertEquals("serialized-payload", actualJobDetail.getJobDataMap().get(JobDataKeys.PAYLOAD));
 
                 Trigger actualTrigger = triggerCaptor.getValue();
-                assertEquals(actualTrigger.getStartTime().toInstant(), triggerAt.toInstant());
+                assertEquals(actualTrigger.getStartTime().toInstant().toEpochMilli(), triggerAt.toInstant().toEpochMilli());
             }
         ).doesNotThrowAnyException();
     }
@@ -117,13 +117,6 @@ public class QuartzJobSchedulerTest {
                 String jobPayload = "payload";
                 ZonedDateTime triggerAt = ZonedDateTime.now();
 
-                Job<String> job = new Job<>(
-                    jobGroup,
-                    jobName,
-                    jobPayload,
-                    triggerAt
-                );
-
                 when(jobClassMapper.getJobMapping(String.class)).thenReturn(jobClassMapping);
                 when(jobClassMapping.serialize(jobPayload)).thenReturn("serialized-payload");
 
@@ -131,6 +124,7 @@ public class QuartzJobSchedulerTest {
                     .when(scheduler)
                     .scheduleJob(any(), any());
 
+                Job<String> job = new Job<>(jobGroup, jobName, jobPayload, triggerAt);
                 quartzJobScheduler.schedule(job);
             }
         ).hasMessage("Error while scheduling job")
