@@ -10,7 +10,7 @@ plugins {
   id 'org.sonarqube' version '3.0'
   id 'maven'
   id 'maven-publish'
-  id 'com.jfrog.bintray' version '1.8.5' apply true
+  id 'com.jfrog.bintray' version '1.8.5'
 }
 
 group = 'uk.gov.hmcts.reform'
@@ -134,14 +134,6 @@ publishing {
       groupId project.group
       artifactId 'sscs-job-scheduler'
       version project.version
-
-      pom.withXml {
-        def root = asNode()
-        root.appendNode('description', 'SSCS job scheduler')
-        root.appendNode('name', 'SSCS job scheduler')
-        root.appendNode('url', 'https://github.com/hmcts/sscs-job-scheduler')
-        root.children().last() + pomConfig
-      }
     }
   }
 }
