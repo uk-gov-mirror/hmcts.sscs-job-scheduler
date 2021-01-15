@@ -12,9 +12,10 @@ plugins {
   id 'maven-publish'
   id 'com.jfrog.bintray' version '1.8.5'
 }
+def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
 
 group = 'uk.gov.hmcts.reform'
-version = '1.5.2'
+version = buildNumber
 
 sourceCompatibility = 11
 targetCompatibility = 11
