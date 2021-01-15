@@ -10,7 +10,7 @@ plugins {
   id 'org.sonarqube' version '3.0'
   id 'maven'
   id 'maven-publish'
-  id 'com.jfrog.bintray' version '1.8.5'
+  id 'com.jfrog.bintray' version '1.8.5' apply true
 }
 
 group = 'uk.gov.hmcts.reform'
@@ -84,7 +84,7 @@ checkstyle {
 pmd {
   toolVersion = "6.19.0"
   ignoreFailures = true
-  sourceSets = [sourceSets.main, sourceSets.test]
+  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.integrationTest]
   reportsDir = file("$project.buildDir/reports/pmd")
   ruleSetFiles = files("config/pmd/ruleset.xml")
 }
@@ -134,6 +134,14 @@ publishing {
       groupId project.group
       artifactId 'sscs-job-scheduler'
       version project.version
+
+      pom.withXml {
+        def root = asNode()
+        root.appendNode('description', 'SSCS job scheduler')
+        root.appendNode('name', 'SSCS job scheduler')
+        root.appendNode('url', 'https://github.com/hmcts/sscs-job-scheduler')
+        root.children().last() + pomConfig
+      }
     }
   }
 }
@@ -145,10 +153,10 @@ bintray {
   publish = true
   pkg {
     repo = 'hmcts-maven'
-    name = 'sscs-job-schedule'
+    name = 'sscs-job-scheduler'
     userOrg = 'hmcts'
     licenses = ['MIT']
-    vcsUrl = 'https://github.com/hmcts/sscs-job-schedule'
+    vcsUrl = 'https://github.com/hmcts/sscs-job-scheduler'
     version {
       name = project.version
     }
