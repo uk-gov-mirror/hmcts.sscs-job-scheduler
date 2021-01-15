@@ -188,7 +188,6 @@ dependencies {
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.reformLogging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.reformLogging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformLogging
-  compile group: 'uk.gov.hmcts.reform', name: 'http-proxy-spring-boot-autoconfigure', version: '1.1.0'
   compile group: 'uk.gov.hmcts.reform', name: 'reform-api-standards', version: '0.3.0'
 
   compile group: 'javax.inject', name: 'javax.inject', version: '1'
@@ -201,6 +200,7 @@ dependencies {
   compile group: 'org.springframework', name: 'spring-tx', version: '5.2.12.RELEASE'
   compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version:'0.1.0'
 
+  testCompile group: 'junit', name: 'junit', version: 4.12
   testCompile group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
   testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.27.2'
   testCompile group: 'org.json', name: 'json', version: '20201115'
