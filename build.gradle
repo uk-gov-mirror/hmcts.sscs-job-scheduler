@@ -1,9 +1,9 @@
 plugins {
+  id 'java'
   id 'java-library'
   id 'checkstyle'
   id 'pmd'
   id 'jacoco'
-  id 'uk.gov.hmcts.java' version '0.12.2'
   id 'io.spring.dependency-management' version '1.0.10.RELEASE'
   id 'org.owasp.dependencycheck' version '6.0.3'
   id 'com.github.ben-manes.versions' version '0.36.0'
@@ -12,6 +12,7 @@ plugins {
   id 'maven-publish'
   id 'com.jfrog.bintray' version '1.8.5'
 }
+
 def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
 
 group = 'uk.gov.hmcts.reform'
