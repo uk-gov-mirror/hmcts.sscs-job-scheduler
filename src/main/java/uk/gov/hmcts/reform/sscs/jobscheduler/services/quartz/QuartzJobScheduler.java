@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobException;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.JobScheduler;
 
 @Service
-public class QuartzJobScheduler implements JobScheduler{
+public class QuartzJobScheduler implements JobScheduler {
 
     private final Scheduler scheduler;
 
@@ -29,8 +29,8 @@ public class QuartzJobScheduler implements JobScheduler{
         try {
             String jobId = UUID.randomUUID().toString();
 
-            Class<T> aClass = (Class<T>) job.payload.getClass();
-            JobClassMapping<T> jobMapping = jobClassMapper.getJobMapping(aClass);
+            Class<T> payloadClass = (Class<T>) job.payload.getClass();
+            JobClassMapping<T> jobMapping = jobClassMapper.getJobMapping(payloadClass);
 
             scheduler.scheduleJob(
                 newJob(QuartzExecutionHandler.class)
