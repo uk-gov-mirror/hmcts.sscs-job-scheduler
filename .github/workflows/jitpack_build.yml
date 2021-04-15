@@ -20,17 +20,17 @@ jobs:
         PACKAGES_FILE="packages.txt"
 
         touch ${PACKAGES_FILE}
-        echo "Wait for the CI build..."
-        sleep 30
 
-        # Try the URL 3 times before failing
+        # Try the URL 6 times before failing
         count=1
-        until [[ $count -gt 3 ]] || [[ $(cat ${PACKAGES_FILE} | wc -l | xargs ) -gt 1 ]] ; do
-          echo "Attempt ${count}/3"
+        until [[ $count -gt 6 ]] || grep -q build.log ${PACKAGES_FILE} ; do
+          echo "Attempt ${count}/6"
           STATUS=$(curl -s -o packages.txt -w "%{http_code}" --max-time 900 ${PACKAGES_URL})
 
           let count+=1
-          sleep 20
+          if [[ ${STATUS} -gt 399 ]]; then
+              sleep 30
+          fi
         done
 
         echo "::group::Files Available"
