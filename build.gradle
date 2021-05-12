@@ -10,7 +10,6 @@ plugins {
   id 'org.sonarqube' version '3.0'
   id 'maven'
   id 'maven-publish'
-  id 'com.jfrog.bintray' version '1.8.5'
 }
 
 def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
@@ -110,9 +109,6 @@ repositories {
   // see: https://github.com/jitpack/jitpack.io/issues/1939
   maven { url 'https://jitpack.io' }
 
-  maven {
-    url "https://dl.bintray.com/hmcts/hmcts-maven"
-  }
 }
 
 publishing {
@@ -128,25 +124,9 @@ publishing {
   }
 }
 
-bintray {
-  user = System.getenv('BINTRAY_USER')
-  key = System.getenv('BINTRAY_KEY')
-  publications = ['Main']
-  publish = true
-  pkg {
-    repo = 'hmcts-maven'
-    name = 'sscs-job-scheduler'
-    userOrg = 'hmcts'
-    licenses = ['MIT']
-    vcsUrl = 'https://github.com/hmcts/sscs-job-scheduler'
-    version {
-      name = project.version
-    }
-  }
-}
 
 def versions = [
-  reformLogging   : '5.0.1',
+  reformLogging   : '5.1.7',
   springBoot   : springBootVersion,
 ]
 
@@ -175,10 +155,8 @@ dependencyManagement {
 dependencies {
   compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
 
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.reformLogging
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.reformLogging
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.reformLogging
-  compile group: 'uk.gov.hmcts.reform', name: 'reform-api-standards', version: '0.3.0'
+  compile group: 'com.github.hmcts', name: 'java-logging', version: versions.reformLogging
+  compile group: 'com.github.hmcts', name: 'reform-api-standards', version: '0.4.0'
 
   compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
