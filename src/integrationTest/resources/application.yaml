@@ -1,6 +1,5 @@
 
 spring.application.name: test
-spring.config.import: "optional:configtree:/mnt/secrets/sscs/"
 
 job.scheduler:
   autoStart: true
