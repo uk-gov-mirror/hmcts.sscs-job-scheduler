@@ -149,6 +149,11 @@ repositories {
 
 }
 
+artifacts {
+  archives sourcesJar
+  archives javadocJar
+}
+
 publishing {
   publications {
     Main(MavenPublication) {
