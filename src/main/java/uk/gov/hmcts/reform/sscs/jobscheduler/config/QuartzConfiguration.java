@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzFailedJobRescheduler;
 
@@ -50,6 +51,7 @@ public class QuartzConfiguration {
 
     @Bean
     @Singleton
+    @Primary
     public Scheduler scheduler(
         SchedulerFactoryBean factory,
         @Value("${job.scheduler.autoStart:true}") boolean autoStart,
