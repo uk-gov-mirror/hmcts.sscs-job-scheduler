@@ -194,7 +194,9 @@ dependencyManagement {
 }
 
 def versions = [
-        springBoot   : '3.4.5',
+        springBoot      : '3.4.5',
+        springframework : '6.2.7',
+        mockito         : '5.18.0',
 ]
 
 dependencies {
@@ -214,17 +216,15 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: versions.springBoot
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: versions.springBoot
-  implementation group: 'org.springframework', name: 'spring-context-support', version: '6.2.7'
-
-  implementation group: 'org.springframework', name: 'spring-tx', version: '6.2.7'
+  implementation group: 'org.springframework', name: 'spring-context-support', version: versions.springframework
+  implementation group: 'org.springframework', name: 'spring-tx', version: versions.springframework
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
-  testImplementation group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '3.0.1'
+  testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.13.0'
   testImplementation group: 'org.json', name: 'json', version: '20250517'
-  testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.18.0'
-  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.18.0'
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: versions.mockito
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: versions.mockito
   testImplementation group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
-
   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.12.2'
   testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.12.2'
 

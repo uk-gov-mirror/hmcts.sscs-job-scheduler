@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.quartz.*;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzFailedJobRescheduler;
-import wiremock.com.google.common.collect.Maps;
+import com.google.common.collect.Maps;
 
 class QuartzFailedJobReschedulerTest {
 
