@@ -11,7 +11,7 @@ plugins {
   id 'maven-publish'
 }
 
-def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
+def buildNumber = System.getenv("RELEASE_VERSION")?: "DEV-SNAPSHOT"
 
 group = 'com.github.hmcts'
 version = buildNumber
@@ -139,9 +139,8 @@ repositories {
   mavenLocal()
   mavenCentral()
 
-  maven {
-    url 'https://repo.spring.io/libs-milestone'
-  }
+  maven { url 'https://repo.spring.io/libs-milestone' }
+  maven { url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1' }
 
   // jitpack was last resort but replaced bintray
   // see: https://github.com/jitpack/jitpack.io/issues/1939
@@ -163,6 +162,17 @@ publishing {
       groupId project.group
       artifactId 'sscs-job-scheduler'
       version project.version
+    }
+  }
+
+  repositories {
+    maven {
+      name = "AzureArtifacts"
+      url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
+      credentials {
+        username = System.getenv("AZURE_DEVOPS_ARTIFACT_USERNAME")
+        password = System.getenv("AZURE_DEVOPS_ARTIFACT_TOKEN")
+      }
     }
   }
 }
@@ -207,7 +217,7 @@ def versions = [
 dependencies {
   implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
 
-  implementation group: 'com.github.hmcts', name: 'java-logging', version: '6.1.7'
+  implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.9'
   implementation group: 'com.github.hmcts', name: 'reform-api-standards', version: '0.5.2', {
     exclude group: 'com.google.guava', module: 'guava'
   }
