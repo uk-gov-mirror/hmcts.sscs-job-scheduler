@@ -2,12 +2,13 @@ package uk.gov.hmcts.reform.sscs.services.quartz;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.quartz.JobBuilder.newJob;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.quartz.*;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzFailedJobRescheduler;
-import com.google.common.collect.Maps;
 
 class QuartzFailedJobReschedulerTest {
 

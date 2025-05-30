@@ -26,13 +26,13 @@ public class JobMapperTest {
     }
 
     @Test
-    public void cannotFindMappingForPayload() throws IllegalArgumentException{
+    public void cannotFindMappingForPayload() throws IllegalArgumentException {
         String payload = "some payload";
 
         JobMapping jobMapping1 = mock(JobMapping.class);
         when(jobMapping1.canHandle(payload)).thenReturn(false);
 
         JobMapper jobMapper = new JobMapper(singletonList(jobMapping1));
-        Assertions.assertThrows(Exception.class, () -> { jobMapper.getJobMapping(payload); });
+        Assertions.assertThrows(Exception.class, () -> jobMapper.getJobMapping(payload));
     }
 }

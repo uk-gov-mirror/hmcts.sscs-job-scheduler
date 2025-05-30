@@ -30,6 +30,6 @@ public class JobClassMapperTest {
         when(jobMapping1.canHandle(String.class)).thenReturn(false);
 
         JobClassMapper jobMapper = new JobClassMapper(singletonList(jobMapping1));
-        Assertions.assertThrows(Exception.class, () -> { jobMapper.getJobMapping(String.class); });
+        Assertions.assertThrows(Exception.class, () -> jobMapper.getJobMapping(String.class));
     }
 }
