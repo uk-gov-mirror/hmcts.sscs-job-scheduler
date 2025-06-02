@@ -19,7 +19,6 @@ import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobClassMapper;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.JobClassMapping;
 import uk.gov.hmcts.reform.sscs.jobscheduler.services.quartz.QuartzJobScheduler;
 
-//@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
 public class QuartzJobSchedulerTest {
 
