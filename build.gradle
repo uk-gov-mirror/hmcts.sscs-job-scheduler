@@ -224,7 +224,6 @@ dependencies {
   testImplementation group: 'org.json', name: 'json', version: '20250517'
   testImplementation group: 'org.mockito', name: 'mockito-core', version: versions.mockito
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: versions.mockito
-  testImplementation group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.12.2'
   testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
   testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.12.2'
