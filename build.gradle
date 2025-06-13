@@ -141,11 +141,6 @@ repositories {
 
   maven { url 'https://repo.spring.io/libs-milestone' }
   maven { url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1' }
-
-  // jitpack was last resort but replaced bintray
-  // see: https://github.com/jitpack/jitpack.io/issues/1939
-  maven { url 'https://jitpack.io' }
-
 }
 
 artifacts {
@@ -203,9 +198,6 @@ dependencies {
   implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.5.0'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.9'
-  implementation group: 'com.github.hmcts', name: 'reform-api-standards', version: '0.5.2', {
-    exclude group: 'com.google.guava', module: 'guava'
-  }
 
   implementation group: 'jakarta.inject', name: 'jakarta.inject-api', version: '2.0.1'
   implementation group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
